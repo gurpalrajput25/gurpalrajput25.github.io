@@ -1,7 +1,7 @@
 # Gurpal Singh — Lead & Staff iOS Engineer
 
 > **Mobile Architecture | SwiftUI & Swift Concurrency | AI-Applied Engineering | 8+ Years Experience**  
-> **Mohali, India • [LinkedIn](https://linkedin.com/in/gurpal-singh) • [GitHub](https://github.com/gurpalrajput25) • [Email](mailto:Gurpal.rajput68@gmail.com)**
+> **Mohali, India • [LinkedIn](https://linkedin.com/in/gurpal-singh) • [GitHub](https://github.com/gurpalrajput25) • [Email](mailto:Gurpalrajput67@gmail.com)**
 
 Live Portfolio Website: **[https://gurpalrajput25.github.io/](https://gurpalrajput25.github.io/)**
 
@@ -55,7 +55,8 @@ Senior iOS Engineer and iOS Tech Lead with 8+ years of experience architecting, 
 ---
 
 ## 📬 Contact
-- **Email**: [Gurpal.rajput68@gmail.com](mailto:Gurpal.rajput68@gmail.com)
+- **Email**: [Gurpalrajput67@gmail.com](mailto:Gurpalrajput67@gmail.com)
 - **Phone**: [+91 9034431120](tel:+919034431120)
 - **LinkedIn**: [linkedin.com/in/gurpal-singh](https://linkedin.com/in/gurpal-singh)
 - **GitHub**: [github.com/gurpalrajput25](https://github.com/gurpalrajput25)
+

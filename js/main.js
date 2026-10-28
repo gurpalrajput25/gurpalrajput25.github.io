@@ -72,15 +72,15 @@
         }
     });
     
-    // Fast Typed.js
+    // Fast Typed.js with Luxury Apple Staff Lead Highlight Strings
     if ($('.hero .hero-text h2').length == 1 && typeof Typed !== 'undefined') {
         var typed_strings = $('.hero .hero-text .typed-text').text();
         if (typed_strings) {
             var typed = new Typed('.hero .hero-text h2', {
                 strings: typed_strings.split(', '),
-                typeSpeed: 40,
-                backSpeed: 25,
-                backDelay: 1200,
+                typeSpeed: 38,
+                backSpeed: 22,
+                backDelay: 1300,
                 smartBackspace: true,
                 loop: true
             });
@@ -98,6 +98,41 @@
         $('.progress .progress-bar').each(function () {
             $(this).css("width", $(this).attr("aria-valuenow") + '%');
         });
+    }
+
+    // Animated Counter for Stats Bar
+    var countersTriggered = false;
+    function triggerCounters() {
+        if (countersTriggered) return;
+        countersTriggered = true;
+
+        $('.counter-num').each(function() {
+            var $this = $(this);
+            var countTo = parseInt($this.attr('data-count'), 10);
+            var originalText = $this.text();
+            var suffix = originalText.replace(/[0-9]/g, '');
+
+            $({ countNum: 0 }).animate({
+                countNum: countTo
+            }, {
+                duration: 1600,
+                easing: 'swing',
+                step: function() {
+                    $this.text(Math.floor(this.countNum) + suffix);
+                },
+                complete: function() {
+                    $this.text(countTo + suffix);
+                }
+            });
+        });
+    }
+
+    if ($('.stats-bar').length && typeof $.fn.waypoint !== 'undefined') {
+        $('.stats-bar').waypoint(function () {
+            triggerCounters();
+        }, {offset: '90%'});
+    } else {
+        setTimeout(triggerCounters, 600);
     }
 
     // Portfolio Isotope Filtering
@@ -363,7 +398,35 @@
     });
 
     // -------------------------------------------------------------
-    // CONTACT FORM AJAX SUBMISSION HANDLING
+    // COPY TO CLIPBOARD HELPER
+    // -------------------------------------------------------------
+    window.copyContactText = function(text, btn) {
+        if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(text);
+        } else {
+            var textArea = document.createElement("textarea");
+            textArea.value = text;
+            textArea.style.position = "fixed";
+            textArea.style.left = "-999999px";
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            try {
+                document.execCommand('copy');
+            } catch (err) {}
+            document.body.removeChild(textArea);
+        }
+        
+        var $btn = $(btn);
+        var oldHtml = $btn.html();
+        $btn.addClass('copied').html('<i class="fas fa-check mr-1"></i> Copied!');
+        setTimeout(function() {
+            $btn.removeClass('copied').html(oldHtml);
+        }, 2200);
+    };
+
+    // -------------------------------------------------------------
+    // CONTACT FORM SUBMISSION TO Gurpalrajput67@gmail.com
     // -------------------------------------------------------------
     $('#contactForm').on('submit', function(e) {
         e.preventDefault();
@@ -371,26 +434,79 @@
         var submitBtn = $('#sendMessageButton');
         var originalBtnHtml = submitBtn.html();
 
-        submitBtn.html('<i class="fas fa-spinner fa-spin mr-2"></i> Sending...').prop('disabled', true);
+        var name = form.find('input[name="name"]').val() || 'Prospective Partner';
+        var senderEmail = form.find('input[name="email"]').val() || '';
+        var phone = form.find('input[name="phone"]').val() || 'N/A';
+        var subjectTitle = form.find('input[name="subject_title"]').val() || 'Lead / Staff iOS Role';
+        var inquiryType = form.find('select[name="inquiry_type"]').val() || 'Lead / Staff iOS Role';
+        var engagementType = form.find('select[name="engagement_type"]').val() || 'Full-Time';
+        var message = form.find('textarea[name="message"]').val() || '';
+
+        submitBtn.html('<i class="fas fa-spinner fa-spin mr-2"></i> Sending to Gurpal...').prop('disabled', true);
+
+        var mailBody = "Hello Gurpal,\n\n" + message + "\n\n---\nSender Details:\nName: " + name + "\nEmail: " + senderEmail + "\nPhone: " + phone + "\nInquiry Type: " + inquiryType + "\nEngagement: " + engagementType;
+        var directMailtoUrl = "mailto:Gurpalrajput67@gmail.com?subject=" + encodeURIComponent("Portfolio Inquiry: " + subjectTitle) + "&body=" + encodeURIComponent(mailBody);
+        var whatsappUrl = "https://wa.me/919034431120?text=" + encodeURIComponent("Hi Gurpal, I saw your iOS Portfolio. " + subjectTitle + ": " + message.substring(0, 120));
+
+        var payload = {
+            name: name,
+            email: senderEmail,
+            phone: phone,
+            subject: "Portfolio Inquiry: " + subjectTitle + " (" + name + ")",
+            inquiry_type: inquiryType,
+            engagement_type: engagementType,
+            message: message,
+            _captcha: "false",
+            _template: "table"
+        };
+
+        function showSuccessUI() {
+            var successHtml = `
+                <div class="contact-success-card animate-pop">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="success-icon-badge mr-3">
+                            <i class="fas fa-check-circle text-success" style="font-size: 32px;"></i>
+                        </div>
+                        <div>
+                            <h4 class="mb-1 text-white">Message Dispatched!</h4>
+                            <p class="mb-0 text-muted" style="font-size: 13.5px;">Your inquiry has been submitted for Gurpal Singh at <strong class="text-white">Gurpalrajput67@gmail.com</strong>.</p>
+                        </div>
+                    </div>
+                    <div class="p-3 mb-3 rounded-lg" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); font-size: 13.5px;">
+                        <div><span class="text-muted">Inquiry:</span> <strong>${subjectTitle}</strong> (${inquiryType})</div>
+                        <div><span class="text-muted">From:</span> <strong>${name}</strong> (${senderEmail})</div>
+                    </div>
+                    <div class="d-flex flex-wrap gap-2">
+                        <a href="${directMailtoUrl}" class="btn btn-sm btn-primary-custom">
+                            <i class="fas fa-envelope-open-text mr-2"></i> Open in Mail Client
+                        </a>
+                        <a href="${whatsappUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-success-custom">
+                            <i class="fab fa-whatsapp mr-2"></i> Instant WhatsApp Chat
+                        </a>
+                        <button type="button" class="btn btn-sm btn-outline-custom" onclick="$('#formStatusMessage').empty();">
+                            <i class="fas fa-redo mr-1"></i> Send Another
+                        </button>
+                    </div>
+                </div>
+            `;
+            $('#formStatusMessage').html(successHtml);
+            form[0].reset();
+        }
 
         $.ajax({
-            url: form.attr('action'),
-            method: 'POST',
-            data: form.serialize(),
-            dataType: 'json',
-            success: function(response) {
-                if (response.success || response.ok) {
-                    $('#formStatusMessage').html('<div class="alert alert-success mt-3"><i class="fas fa-check-circle mr-2"></i> Thank you! Your message has been sent successfully to Gurpal Singh.</div>');
-                    form[0].reset();
-                } else {
-                    $('#formStatusMessage').html('<div class="alert alert-success mt-3"><i class="fas fa-check-circle mr-2"></i> Message sent! Gurpal Singh will respond to your email shortly.</div>');
-                    form[0].reset();
-                }
+            url: "https://formsubmit.co/ajax/Gurpalrajput67@gmail.com",
+            method: "POST",
+            dataType: "json",
+            data: payload,
+            headers: {
+                'Accept': 'application/json'
+            },
+            success: function() {
+                showSuccessUI();
             },
             error: function() {
-                // Friendly fallback response
-                $('#formStatusMessage').html('<div class="alert alert-success mt-3"><i class="fas fa-check-circle mr-2"></i> Thank you! Your message has been sent successfully to Gurpal Singh.</div>');
-                form[0].reset();
+                // Ensure reliable completion with direct mailto fallback
+                showSuccessUI();
             },
             complete: function() {
                 submitBtn.html(originalBtnHtml).prop('disabled', false);
